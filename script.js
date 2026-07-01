@@ -4,6 +4,14 @@
 let triggerData = null;
 let activeIndex = 0;
 
+// ---- Scenario mode state (Scenario tab feature) ----
+// currentScenario: the active scenario object from data/scenarios.js, or null when not in scenario mode
+// scenarioStep: 0 idle | 2 waiting for reply #1 | 4 waiting for reply #2 | 8 complete
+let currentScenario = null;
+let scenarioStep = 0;
+let scenarioReply1Score = 0;
+let scenarioReply2Score = 0;
+
 const camRailEl = document.getElementById("camRail");
 const chatWindow = document.getElementById("chatWindow");
 const activityLog = document.getElementById("activityLog");
@@ -61,6 +69,7 @@ async function loadTriggers() {
   switchCandidate(0);
   seedActivityLog();
   startLiveTimers();
+  renderScenarioDropdown();
 }
 
 // ============================================================
@@ -103,6 +112,10 @@ function updateActiveTileHighlight() {
 // Switching the active candidate into the main panel
 // ============================================================
 function switchCandidate(idx) {
+  // Switching candidates while mid-scenario would mix up which session the
+  // scenario transcript/score belongs to, so back out to normal chat first.
+  if (currentScenario) exitScenarioMode();
+
   activeIndex = idx;
   const cand = CANDIDATE_ROSTER[idx];
 
@@ -242,12 +255,203 @@ function findReply(userText) {
 }
 
 // ============================================================
+// Scenario mode (Scenario tab, right beside Security)
+// Drives Steps 1–9 from the scripted scenario flow, using data/scenarios.js
+// ============================================================
+const scenarioTabBtn = document.getElementById("scenarioTabBtn");
+const scenarioDropdown = document.getElementById("scenarioDropdown");
+const actionModalOverlay = document.getElementById("actionModalOverlay");
+const actionModalBox = document.getElementById("actionModalBox");
+
+function renderScenarioDropdown() {
+  scenarioDropdown.innerHTML = "";
+  (window.SCENARIOS || []).forEach(sc => {
+    const item = document.createElement("div");
+    item.className = "scenario-item";
+    item.textContent = sc.label;
+    item.addEventListener("click", () => {
+      scenarioDropdown.classList.remove("open");
+      startScenario(sc);
+    });
+    scenarioDropdown.appendChild(item);
+  });
+}
+
+scenarioTabBtn.addEventListener("click", () => {
+  scenarioDropdown.classList.toggle("open");
+});
+
+// close the dropdown if the trainee clicks anywhere else on the page
+document.addEventListener("click", (e) => {
+  if (!scenarioTabBtn.contains(e.target) && !scenarioDropdown.contains(e.target)) {
+    scenarioDropdown.classList.remove("open");
+  }
+});
+
+// Renders a scenario message into the chat window WITHOUT saving it into
+// the candidate's permanent cand.messages history — scenario transcripts
+// are transient and separate from the normal working chat.
+function addScenarioMessage(text, who, direction) {
+  renderSingleMessage({ text, who, direction, time: formatTime() });
+}
+
+// Step 1: scenario setup + mark the Scenario tab visually active
+function startScenario(sc) {
+  currentScenario = sc;
+  scenarioStep = 1;
+  scenarioReply1Score = 0;
+  scenarioReply2Score = 0;
+
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  scenarioTabBtn.classList.add("active");
+
+  const cand = activeCandidate();
+  chatWindow.innerHTML = "";
+  const setupEl = document.createElement("div");
+  setupEl.className = "chat-instructions";
+  setupEl.innerHTML = sc.setupText(cand.name);
+  chatWindow.appendChild(setupEl);
+
+  // Step 2: candidate's first message, after a short "typing" beat
+  showTypingIndicator();
+  setTimeout(() => {
+    removeTypingIndicator();
+    addScenarioMessage(sc.candidateMessage1, cand.name, "in");
+    scenarioStep = 2; // now waiting on the trainee's Step 3 reply
+  }, 800);
+}
+
+// Scores a trainee reply against a scenario's trigger/idea-check table
+function scoreScenarioReply(text, triggers, minWords, minWordsScore) {
+  const lower = text.toLowerCase();
+  let score = 0;
+  triggers.forEach(t => {
+    if (t.keywords.some(kw => lower.includes(kw))) score += t.score;
+  });
+  if (score === 0 && text.trim().split(/\s+/).filter(Boolean).length >= minWords) {
+    score = minWordsScore; // "minimum words implied" fallback
+  }
+  return score;
+}
+
+// Routes a chat-input submission to Step 3 or Step 6 while a scenario is active
+function handleScenarioReply(text) {
+  const sc = currentScenario;
+  const cand = activeCandidate();
+
+  if (scenarioStep === 2) {
+    // Step 3: trainee's first reply
+    addScenarioMessage(text, "You", "out");
+    scenarioReply1Score = scoreScenarioReply(text, sc.reply1Triggers, sc.reply1MinWords, sc.reply1MinWordsScore);
+    scenarioStep = 3;
+
+    // Step 5: candidate's second message
+    showTypingIndicator();
+    setTimeout(() => {
+      removeTypingIndicator();
+      addScenarioMessage(sc.candidateMessage2, cand.name, "in");
+      scenarioStep = 4; // now waiting on the trainee's Step 6 reply
+    }, 800);
+
+  } else if (scenarioStep === 4) {
+    // Step 6: trainee's second reply
+    addScenarioMessage(text, "You", "out");
+    scenarioReply2Score = scoreScenarioReply(text, sc.reply2Triggers, sc.reply2MinWords, sc.reply2MinWordsScore);
+    scenarioStep = 5;
+
+    const promptEl = document.createElement("div");
+    promptEl.className = "chat-instructions";
+    promptEl.textContent = "Complete the Action Tab to finish this scenario.";
+    chatWindow.appendChild(promptEl);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    openActionModal();
+  }
+}
+
+// Step 7: Action Tab, shown as a popup/modal overlay
+function openActionModal() {
+  const sc = currentScenario;
+  actionModalBox.innerHTML = `<h3 class="modal-title">Action Tab — ${sc.label}</h3>`;
+
+  sc.actionFields.forEach(f => {
+    actionModalBox.innerHTML += `
+      <label class="modal-field-label">${f.label}</label>
+      <div class="modal-field-prompt">${f.prompt}</div>
+      <textarea class="modal-field-input" id="actionField_${f.key}" rows="2"></textarea>
+    `;
+  });
+  actionModalBox.innerHTML += `<button class="modal-submit-btn" id="actionSubmitBtn">Submit</button>`;
+
+  actionModalOverlay.classList.add("open");
+
+  document.getElementById("actionSubmitBtn").addEventListener("click", () => {
+    const values = {};
+    sc.actionFields.forEach(f => {
+      values[f.key] = document.getElementById(`actionField_${f.key}`).value.trim();
+    });
+    actionModalOverlay.classList.remove("open");
+    finishScenario(values);
+  });
+}
+
+// Step 8 + 9: scenario complete — show feedback + ideal response, and write
+// the Action Tab inputs into this candidate's session log as a note
+function finishScenario(values) {
+  const sc = currentScenario;
+  const total = scenarioReply1Score + scenarioReply2Score; // out of 200 (100 per reply)
+
+  let tier = "wrong";
+  let tierLabel = "Wrong";
+  if (total >= 200) { tier = "max"; tierLabel = "Maximum Trigger Achieved"; }
+  else if (total >= 100) { tier = "mid"; tierLabel = "Mid Trigger Achieved"; }
+  else if (total > 0) { tier = "min"; tierLabel = "Minimum Trigger Achieved"; }
+
+  const feedbackEl = document.createElement("div");
+  feedbackEl.className = `scenario-feedback tier-${tier}`;
+  feedbackEl.innerHTML = `<strong>${tierLabel}</strong>${sc.feedback[tier]}`;
+  chatWindow.appendChild(feedbackEl);
+
+  const idealEl = document.createElement("div");
+  idealEl.className = "scenario-feedback tier-ideal";
+  idealEl.innerHTML = `<strong>Ideal Response</strong>${sc.idealResponse}`;
+  chatWindow.appendChild(idealEl);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  // Step 7's action-tab inputs become this candidate's session-log note
+  const cand = activeCandidate();
+  const noteSummary = sc.actionFields.map(f => `${f.label}: ${values[f.key] || "\u2014"}`).join("<br>");
+  logEvent({
+    title: `Scenario complete: ${sc.label}`,
+    sub: `${noteSummary}<br>${cand.name}`,
+    tag: "note",
+    tagLabel: "note",
+  });
+
+  scenarioStep = 8;
+}
+
+// Leaving scenario mode (Step 9 tail): clicking back to CHAT restores the
+// normal working UI with the regular trigger replies
+function exitScenarioMode() {
+  currentScenario = null;
+  scenarioStep = 0;
+  renderChatWindow();
+}
+
+// ============================================================
 // Form submit
 // ============================================================
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const text = chatInput.value.trim();
   if (!text) return;
+
+  if (currentScenario && (scenarioStep === 2 || scenarioStep === 4)) {
+    handleScenarioReply(text);
+    chatInput.value = "";
+    return;
+  }
 
   const cand = activeCandidate();
   addMessage({ text, who: "You", direction: "out" });
@@ -286,9 +490,15 @@ addNoteBtn.addEventListener("click", () => {
 // Tabs (visual only for now)
 // ============================================================
 document.querySelectorAll(".tab").forEach(tab => {
+  if (tab.id === "scenarioTabBtn") return; // handled separately above (opens the dropdown, doesn't switch tabs)
+
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     tab.classList.add("active");
+
+    if (tab.dataset.tab === "chat" && currentScenario) {
+      exitScenarioMode(); // Step 9 tail: back to the normal working chat UI
+    }
   });
 });
 
