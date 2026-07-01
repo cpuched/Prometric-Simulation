@@ -2,59 +2,133 @@
   "candidateName": "Chedrick Rodriguez",
   "candidateId": "8800000001644794",
   "sessionLabel": "ZZDEMO Testing",
+  "scriptSource": "Proctor Agent Script (LSAC / Prometric ProProctor)",
+  "instructions": "Type the PROCTOR script lines below, the way you would say them to a real candidate. The simulated candidate will respond automatically based on keywords in what you type.",
   "triggers": [
     {
-      "keywords": ["cant see", "can't see", "no exam", "blank screen", "screen is blank"],
-      "reply": "Thanks for letting me know. Can you try refreshing the exam page on your end?"
+      "keywords": ["i will be your proctor", "my name is", "hello, i will be"],
+      "reply": "Hi, thank you. Nice to meet you."
     },
     {
-      "keywords": ["frozen", "freezing", "not moving", "stuck"],
-      "reply": "I see that too. Please give it a few seconds — if it's still frozen, try reloading the browser tab."
+      "keywords": ["send me a message via chat", "use the audio feature"],
+      "reply": "Okay, got it. I'll message you if I need anything."
     },
     {
-      "keywords": ["disconnect", "disconnected", "lost connection", "internet"],
-      "reply": "No worries, that happens. Please reconnect when you're ready and we'll resume the session."
+      "keywords": ["head to shoulders", "remain in the camera view"],
+      "reply": "Understood, I'll make sure to stay in view the whole time."
     },
     {
-      "keywords": ["hello", "hi", "good morning", "good afternoon"],
-      "reply": "Hello! I'm your proctor for today's session. How can I help you?"
+      "keywords": ["not obscure the camera", "grounds for termination"],
+      "reply": "Noted, I'll be careful not to block the camera."
     },
     {
-      "keywords": ["thank you", "thanks", "salamat"],
-      "reply": "You're welcome. Let me know if you need anything else."
+      "keywords": ["inform me whenever you are ready for your break", "let me know if you need a break"],
+      "reply": "Sure, I'll let you know before I take a break."
     },
     {
-      "keywords": ["id", "identification", "valid id"],
-      "reply": "Please hold your valid ID up to the camera so I can verify it."
+      "keywords": ["certifying statement", "read your certifying statement"],
+      "reply": "Okay, reading it out loud now... done."
     },
     {
-      "keywords": ["bathroom", "cr", "restroom", "toilet"],
-      "reply": "That's fine, just let me know before you step away and I'll pause the timer."
+      "keywords": ["launching your exam", "good luck"],
+      "reply": "Thank you! I'm ready to start."
     },
     {
-      "keywords": ["mic", "microphone", "audio", "cant hear", "can't hear"],
-      "reply": "Let's do a quick audio check — can you say something so I can confirm I hear you?"
+      "keywords": ["break policy", "understand the break policy"],
+      "reply": "Yes, I understand the break policy."
     },
     {
-      "keywords": ["camera", "webcam", "video"],
-      "reply": "I can see your camera feed is active. Can you adjust it so your full face and workspace are visible?"
+      "keywords": ["any questions", "do you have any questions"],
+      "reply": "No, I don't have any questions. I'm ready."
     },
     {
-      "keywords": ["noise", "someone", "background", "person"],
-      "reply": "I noticed some movement in the background. Could you confirm you're alone in the testing area?"
+      "keywords": ["cellphone location", "show me your cellphone", "where is your cellphone"],
+      "reply": "Sure, it's right here on the desk, powered off."
     },
     {
-      "keywords": ["ready", "can i start", "may i start", "begin"],
-      "reply": "Yes, you're clear to begin whenever you're ready. Good luck!"
+      "keywords": ["move your webcam clockwise", "four corners of your ceiling", "show me your walls", "360 degrees of your room"],
+      "reply": "Okay, one moment, moving the camera around now."
     },
     {
-      "keywords": ["done", "finished", "submit", "submitted"],
-      "reply": "Great, I can see the submission on my end. Thank you for completing the exam."
+      "keywords": ["front and back of your chair", "underneath the seat"],
+      "reply": "Sure, here's the front, back, and underneath of my chair."
+    },
+    {
+      "keywords": ["floor where your feet", "see the floor"],
+      "reply": "Yes, here's the floor under my desk."
+    },
+    {
+      "keywords": ["show me your workspace", "top, underside and underneath of your workspace"],
+      "reply": "Okay, here's my workspace, top and underneath."
+    },
+    {
+      "keywords": ["show me your keyboard", "underneath of your keyboard"],
+      "reply": "Sure, here's my keyboard, top and bottom."
+    },
+    {
+      "keywords": ["mouse and mousepad", "underneath of the mouse"],
+      "reply": "Here's my mouse and mousepad, both sides."
+    },
+    {
+      "keywords": ["wearing headphones", "type of headphones", "earbuds"],
+      "reply": "No, I'm not wearing any headphones or earbuds."
+    },
+    {
+      "keywords": ["remove your glasses", "360 degrees of it"],
+      "reply": "Sure, here are my glasses, front and back."
+    },
+    {
+      "keywords": ["front and back of both your ears", "show me your ears"],
+      "reply": "Okay, here are my ears, both sides."
+    },
+    {
+      "keywords": ["show me your hands", "hands, front and back"],
+      "reply": "Sure, here are my hands, front and back."
+    },
+    {
+      "keywords": ["pull up your sleeves", "wrists up to your forearms"],
+      "reply": "Okay, sleeves pulled up, nothing written on my arms."
+    },
+    {
+      "keywords": ["show me your fingernails", "fingernails"],
+      "reply": "Here you go, nothing written on them."
+    },
+    {
+      "keywords": ["pockets on your shirt", "pull out your pockets", "pockets on your trousers", "pockets on the trousers back"],
+      "reply": "Sure, all my pockets are empty, see?"
+    },
+    {
+      "keywords": ["thank you for your cooperation", "you may resume your exam"],
+      "reply": "Thank you, resuming now."
+    },
+    {
+      "keywords": ["thank you for testing", "make sure you exit the application"],
+      "reply": "Thank you, I'll exit the application now. Have a good day!"
+    },
+    {
+      "keywords": ["vpn connection has been detected", "disconnect from the vpn"],
+      "reply": "Oh, sorry about that. Let me disconnect it and log back in."
+    },
+    {
+      "keywords": ["ip address indicates", "outside of an approved testing region"],
+      "reply": "Oh no, that's strange. What should I do next?"
+    },
+    {
+      "keywords": ["hello"],
+      "reply": "Hi, yes I can see your message. Chat is working on my end."
+    },
+    {
+      "keywords": ["can't see", "cant see", "screen frozen", "blank screen"],
+      "reply": "Sorry about that, let me try refreshing on my end."
+    },
+    {
+      "keywords": ["disconnect", "lost connection"],
+      "reply": "Sorry, my connection dropped for a second, I'm back now."
     }
   ],
   "fallbackReplies": [
-    "Got it, one moment while I check that on my end.",
-    "Understood, thanks for the update.",
-    "Noted. Let me take a look."
+    "Okay, understood.",
+    "Got it, thank you.",
+    "Sure, no problem."
   ]
 }
