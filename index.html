@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProctorSim — Training Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="icon-btn" aria-label="Menu">☰</button>
+      <span class="brand">ProctorSim</span>
+      <span class="build-tag">TRAINING BUILD — 1.0.0</span>
+    </div>
+    <div class="topbar-right">
+      <span class="role-tag">Trainee Proctor</span>
+      <span class="status-pill">
+        <span class="dot"></span> Available <span class="timer">1h 23min</span>
+      </span>
+      <button class="icon-btn" aria-label="Account">👤</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT: camera thumbnails -->
+    <aside class="cam-rail">
+      <div class="cam-card">
+        <div class="cam-thumb" id="thumbCandidate">
+          <span class="cam-placeholder">Candidate cam</span>
+        </div>
+        <div class="cam-label">ZZDEMO Testing</div>
+        <div class="cam-controls">
+          <button class="ctrl-btn" data-action="chat">💬<span>Chat</span></button>
+          <button class="ctrl-btn" data-action="photo">📷<span>Take photo</span></button>
+          <button class="ctrl-btn" data-action="pause">⏸<span>Pause</span></button>
+          <button class="ctrl-btn active" data-action="mic">🎙<span>Candidate</span></button>
+        </div>
+      </div>
+
+      <div class="cam-card">
+        <div class="cam-thumb" id="thumbSelf">
+          <span class="cam-placeholder">Your cam</span>
+        </div>
+        <div class="cam-label">ZZDEMO Testing</div>
+        <div class="cam-controls">
+          <button class="ctrl-btn" data-action="chat">💬<span>Chat</span></button>
+          <button class="ctrl-btn" data-action="photo">📷<span>Take photo</span></button>
+          <button class="ctrl-btn active" data-action="mic">🎙<span>Candidate</span></button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: main video + chat -->
+    <section class="main-panel">
+      <div class="main-video">
+        <span class="cam-placeholder">Live exam view</span>
+      </div>
+      <div class="main-video-bar">
+        <span class="session-label">ZZDEMO Testing</span>
+      </div>
+
+      <div class="candidate-strip">
+        <div class="candidate-id" id="candidateIdLabel">8800000001644794</div>
+        <button class="ctrl-btn stacked" data-action="photo">📷<span>Take photo</span></button>
+        <button class="ctrl-btn stacked muted" data-action="mic">🚫🎙<span>Me</span></button>
+      </div>
+
+      <div class="live-row">
+        <span class="live-dot">Live</span>
+        <span class="live-timer" id="liveTimer">04:49</span>
+      </div>
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="chat">CHAT</button>
+        <button class="tab" data-tab="info">CANDIDATE INFO</button>
+        <button class="tab" data-tab="security">SECURITY</button>
+      </nav>
+
+      <div class="chat-window" id="chatWindow"></div>
+
+      <form class="chat-input-row" id="chatForm">
+        <input type="text" id="chatInput" placeholder="Type message" autocomplete="off">
+        <button type="submit" class="send-btn" aria-label="Send">➤</button>
+      </form>
+    </section>
+
+    <!-- RIGHT: activity log + notes -->
+    <aside class="activity-rail">
+      <div class="activity-log" id="activityLog"></div>
+
+      <div class="note-block">
+        <div class="note-header">Note <span class="note-plus">+</span></div>
+        <textarea class="note-area" id="noteArea" placeholder="Write a note for this session..."></textarea>
+        <button class="add-note-btn" id="addNoteBtn">Add Note</button>
+      </div>
+    </aside>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

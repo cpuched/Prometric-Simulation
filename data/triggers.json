@@ -1,0 +1,60 @@
+{
+  "candidateName": "Chedrick Rodriguez",
+  "candidateId": "8800000001644794",
+  "sessionLabel": "ZZDEMO Testing",
+  "triggers": [
+    {
+      "keywords": ["cant see", "can't see", "no exam", "blank screen", "screen is blank"],
+      "reply": "Thanks for letting me know. Can you try refreshing the exam page on your end?"
+    },
+    {
+      "keywords": ["frozen", "freezing", "not moving", "stuck"],
+      "reply": "I see that too. Please give it a few seconds — if it's still frozen, try reloading the browser tab."
+    },
+    {
+      "keywords": ["disconnect", "disconnected", "lost connection", "internet"],
+      "reply": "No worries, that happens. Please reconnect when you're ready and we'll resume the session."
+    },
+    {
+      "keywords": ["hello", "hi", "good morning", "good afternoon"],
+      "reply": "Hello! I'm your proctor for today's session. How can I help you?"
+    },
+    {
+      "keywords": ["thank you", "thanks", "salamat"],
+      "reply": "You're welcome. Let me know if you need anything else."
+    },
+    {
+      "keywords": ["id", "identification", "valid id"],
+      "reply": "Please hold your valid ID up to the camera so I can verify it."
+    },
+    {
+      "keywords": ["bathroom", "cr", "restroom", "toilet"],
+      "reply": "That's fine, just let me know before you step away and I'll pause the timer."
+    },
+    {
+      "keywords": ["mic", "microphone", "audio", "cant hear", "can't hear"],
+      "reply": "Let's do a quick audio check — can you say something so I can confirm I hear you?"
+    },
+    {
+      "keywords": ["camera", "webcam", "video"],
+      "reply": "I can see your camera feed is active. Can you adjust it so your full face and workspace are visible?"
+    },
+    {
+      "keywords": ["noise", "someone", "background", "person"],
+      "reply": "I noticed some movement in the background. Could you confirm you're alone in the testing area?"
+    },
+    {
+      "keywords": ["ready", "can i start", "may i start", "begin"],
+      "reply": "Yes, you're clear to begin whenever you're ready. Good luck!"
+    },
+    {
+      "keywords": ["done", "finished", "submit", "submitted"],
+      "reply": "Great, I can see the submission on my end. Thank you for completing the exam."
+    }
+  ],
+  "fallbackReplies": [
+    "Got it, one moment while I check that on my end.",
+    "Understood, thanks for the update.",
+    "Noted. Let me take a look."
+  ]
+}
