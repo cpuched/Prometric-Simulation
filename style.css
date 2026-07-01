@@ -229,6 +229,100 @@ body {
 }
 .tab.active { color: var(--accent-green); border-color: var(--accent-green); }
 
+/* ---------- Scenario tab + dropdown ---------- */
+.scenario-tab-wrap { position: relative; }
+.scenario-tab-wrap .caret { font-size: 9px; }
+.scenario-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 200px;
+  max-height: 180px; /* scrollable once more scenarios are added */
+  overflow-y: auto;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 20;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+.scenario-dropdown.open { display: block; }
+.scenario-item {
+  padding: 9px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+.scenario-item:last-child { border-bottom: none; }
+.scenario-item:hover { background: var(--panel); color: var(--accent-green); }
+
+/* Step 9: feedback boxes rendered inline in the chat window */
+.scenario-feedback {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+.scenario-feedback strong { display: block; margin-bottom: 4px; }
+.scenario-feedback.tier-wrong { border-color: #d9534f; color: var(--text); }
+.scenario-feedback.tier-wrong strong { color: #d9534f; }
+.scenario-feedback.tier-min { border-color: var(--accent-orange); }
+.scenario-feedback.tier-min strong { color: var(--accent-orange); }
+.scenario-feedback.tier-mid { border-color: var(--accent-blue); }
+.scenario-feedback.tier-mid strong { color: var(--accent-blue); }
+.scenario-feedback.tier-max { border-color: var(--accent-green); }
+.scenario-feedback.tier-max strong { color: var(--accent-green); }
+.scenario-feedback.tier-ideal { border-style: dashed; }
+.scenario-feedback.tier-ideal strong { color: var(--text-dim); }
+
+/* ---------- Step 7: Action Tab modal ---------- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 380px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 18px;
+}
+.modal-title { margin: 0 0 12px; font-size: 15px; }
+.modal-field-label { display: block; font-weight: 700; font-size: 12px; margin-top: 12px; }
+.modal-field-prompt { font-size: 11px; color: var(--text-dim); margin: 2px 0 6px; }
+.modal-field-input {
+  width: 100%;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 8px;
+  font-size: 12px;
+  resize: vertical;
+}
+.modal-submit-btn {
+  background: var(--accent-green);
+  border: none;
+  color: #06210f;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 16px;
+  float: right;
+}
+
 .chat-window {
   flex: 1 1 auto;
   min-height: 0; /* this + overflow-y:auto is what makes the chat scroll INSIDE its box */

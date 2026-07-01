@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ProctorSim — Training Simulator</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -52,6 +52,11 @@
         <button class="tab active" data-tab="chat">CHAT</button>
         <button class="tab" data-tab="info">CANDIDATE INFO</button>
         <button class="tab" data-tab="security">SECURITY</button>
+        <div class="scenario-tab-wrap">
+          <button class="tab" id="scenarioTabBtn" data-tab="scenario">SCENARIO <span class="caret">▾</span></button>
+          <!-- populated from data/scenarios.js — scrollable so more scenarios can be added later -->
+          <div class="scenario-dropdown" id="scenarioDropdown"></div>
+        </div>
       </nav>
 
       <div class="chat-window" id="chatWindow"></div>
@@ -75,6 +80,12 @@
 
   </main>
 
-  <script src="script.js"></script>
+  <!-- Step 7: Action Tab — popup/modal overlay, filled dynamically per-scenario -->
+  <div class="modal-overlay" id="actionModalOverlay">
+    <div class="modal-box" id="actionModalBox"></div>
+  </div>
+
+  <script src="./data/scenarios.js?v=2"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
