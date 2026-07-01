@@ -6,12 +6,12 @@ access to the real production tool.
 
 ## Features
 - Reference-accurate layout: candidate/self camera panels, main video pane, live chat, and
-  activity timeline
-- **Auto-reply engine** — typing a trigger word/phrase (e.g. `disconnect`, `cant see`,
-  `thank you`) in the chat box triggers a simulated candidate response after a short
-  "typing…" delay, so trainees get used to real chat pacing
+  activity timeline — all panels scroll internally, so the page never grows past the viewport
+- **Role: you are the proctor.** You type the proctor's script lines (based on the real
+  Proctor Agent Script), and the simulated candidate responds automatically after a short
+  "typing…" delay — matching how the real chat exchange actually flows
 - Editable trigger/response pairs in `data/triggers.json` — no code changes needed to add
-  new scenarios
+  new script lines or scenarios
 - Live activity log with note-taking, styled to match the real tool's tag system
   (`note`, `assignment`, `disconnect`)
 - Countdown "Live" timer for exam-session realism
@@ -46,14 +46,21 @@ bpo-sim-tool/
 ```
 
 ## Customizing scenarios
-Open `data/triggers.json` and add new entries under `triggers`:
+Open `data/triggers.json` and add new entries under `triggers`. The `keywords` should match
+phrases from **your proctor script** (what the trainee types), and `reply` is what the
+simulated candidate says back:
 ```json
 {
-  "keywords": ["your keyword here"],
-  "reply": "The auto-reply text shown to the trainee"
+  "keywords": ["please ensure your head to shoulders"],
+  "reply": "Understood, I'll stay in view."
 }
 ```
-`fallbackReplies` is used when no keyword matches, so the chat never goes silent.
+`fallbackReplies` is used when nothing matches, so the chat never goes silent.
+
+The current trigger set is built around the **Proctor Agent Script** portion of a real
+proctoring workflow (initial check-in confirmation, exam launch, break return security scan,
+and exam completion) — not the Readiness Agent script, since the Readiness Agent's check-in
+happens over audio, not chat.
 
 ## Roadmap ideas
 - [ ] Score trainees on response time / correct escalation choices

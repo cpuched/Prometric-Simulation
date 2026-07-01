@@ -22,10 +22,11 @@ async function loadTriggers() {
       candidateId: "8800000001644794",
       sessionLabel: "ZZDEMO Testing",
       triggers: [
-        { keywords: ["hello", "hi"], reply: "Hello! I'm your proctor for today's session." },
-        { keywords: ["thank you", "thanks"], reply: "You're welcome!" }
+        { keywords: ["hello"], reply: "Hi, yes I can see your message." },
+        { keywords: ["camera view"], reply: "Understood, I'll stay in view." },
+        { keywords: ["cellphone"], reply: "Sure, it's right here, powered off." }
       ],
-      fallbackReplies: ["Noted, thank you."]
+      fallbackReplies: ["Okay, understood.", "Got it, thank you."]
     };
   }
   candidateIdLabel.textContent = triggerData.candidateId;
@@ -83,8 +84,12 @@ function removeTypingIndicator() {
 }
 
 function seedInitialChat() {
-  addMessage({ text: "thank you", who: "Me", direction: "in" });
-  addMessage({ text: "No problem.", who: "You", direction: "out" });
+  const el = document.createElement("div");
+  el.className = "chat-instructions";
+  el.innerHTML = `You are the <strong>proctor</strong> in this simulation. Type your script lines into the box below
+    (e.g. "Please ensure your head to shoulders remain in the camera view") and the simulated
+    candidate, <strong>${triggerData.candidateName}</strong>, will respond automatically.`;
+  chatWindow.appendChild(el);
 }
 
 // ---------- Activity log ----------
