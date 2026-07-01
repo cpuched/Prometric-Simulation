@@ -25,33 +25,8 @@
 
   <main class="layout">
 
-    <!-- LEFT: camera thumbnails -->
-    <aside class="cam-rail">
-      <div class="cam-card">
-        <div class="cam-thumb" id="thumbCandidate">
-          <span class="cam-placeholder">Candidate cam</span>
-        </div>
-        <div class="cam-label">ZZDEMO Testing</div>
-        <div class="cam-controls">
-          <button class="ctrl-btn" data-action="chat">💬<span>Chat</span></button>
-          <button class="ctrl-btn" data-action="photo">📷<span>Take photo</span></button>
-          <button class="ctrl-btn" data-action="pause">⏸<span>Pause</span></button>
-          <button class="ctrl-btn active" data-action="mic">🎙<span>Candidate</span></button>
-        </div>
-      </div>
-
-      <div class="cam-card">
-        <div class="cam-thumb" id="thumbSelf">
-          <span class="cam-placeholder">Your cam</span>
-        </div>
-        <div class="cam-label">ZZDEMO Testing</div>
-        <div class="cam-controls">
-          <button class="ctrl-btn" data-action="chat">💬<span>Chat</span></button>
-          <button class="ctrl-btn" data-action="photo">📷<span>Take photo</span></button>
-          <button class="ctrl-btn active" data-action="mic">🎙<span>Candidate</span></button>
-        </div>
-      </div>
-    </aside>
+    <!-- LEFT: candidate queue (up to 8) — populated by script.js, click a tile to bring that candidate into the main panel -->
+    <aside class="cam-rail" id="camRail"></aside>
 
     <!-- CENTER: main video + chat -->
     <section class="main-panel">
@@ -59,7 +34,7 @@
         <span class="cam-placeholder">Live exam view</span>
       </div>
       <div class="main-video-bar">
-        <span class="session-label">ZZDEMO Testing</span>
+        <span class="session-label" id="mainSessionLabel">ZZDEMO Testing</span>
       </div>
 
       <div class="candidate-strip">
