@@ -19,14 +19,14 @@ const addNoteBtn = document.getElementById("addNoteBtn");
 // and countdown timer, so switching tiles feels like switching between real
 // concurrent sessions instead of resetting everything.
 const CANDIDATE_ROSTER = [
-  { id: "8800000001644794", name: "Chedrick Rodriguez", initials: "CR", color: "#3ecf6b" },
-  { id: "8800000001645112", name: "Marian Monlealto",   initials: "MM", color: "#4a90d9" },
-  { id: "8800000001645873", name: "Jome Suyat",          initials: "JS", color: "#e8823c" },
-  { id: "8800000001646210", name: "Aljerd Abelgas",      initials: "AA", color: "#c15fd6" },
-  { id: "8800000001646932", name: "Yonathan Ohayon",     initials: "YO", color: "#d9534f" },
-  { id: "8800000001647401", name: "Kristine Bautista",   initials: "KB", color: "#2fb8b8" },
-  { id: "8800000001647988", name: "Miguel Santos",       initials: "MS", color: "#b8a12f" },
-  { id: "8800000001648550", name: "Denise Lopez",        initials: "DL", color: "#7a8bd9" },
+  { id: "0000000001644794", name: "Chedrick Rodriguez", initials: "CR", color: "#3ecf6b" },
+  { id: "0000000001645112", name: "Candidate 1",   initials: "C1", color: "#4a90d9" },
+  { id: "0000000001645873", name: "Candidate 2",          initials: "C2", color: "#e8823c" },
+  { id: "0000000001646210", name: "Candidate 3",      initials: "C3", color: "#c15fd6" },
+  { id: "0000000001646932", name: "Candidate 4",     initials: "C4", color: "#d9534f" },
+  { id: "0000000001647401", name: "Canddidate 5",   initials: "C5", color: "#2fb8b8" },
+  { id: "0000000001647988", name: "Canddidate 6",       initials: "C6", color: "#b8a12f" },
+  { id: "0000000001648550", name: "Canddidate 7",        initials: "C7", color: "#7a8bd9" },
 ];
 
 // ============================================================
