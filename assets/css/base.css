@@ -1,0 +1,77 @@
+:root {
+  --bg: #0d0f10;
+  --panel: #17191b;
+  --panel-alt: #1e2123;
+  --border: #2a2d2f;
+  --text: #e8e8e6;
+  --text-dim: #9aa0a6;
+  --accent-green: #3ecf6b;
+  --accent-orange: #e8823c;
+  --accent-blue: #4a90d9;
+  --bubble-out: #1f6f8b;
+  --bubble-in: #2a2d2f;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", Roboto, -apple-system, sans-serif;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* the page itself never scrolls; inner panels do */
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #000;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.topbar-left, .topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.brand { font-weight: 700; letter-spacing: 0.3px; }
+.build-tag {
+  font-size: 11px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.role-tag { font-size: 12px; color: var(--text-dim); }
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  background: var(--panel-alt);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.dot {
+  width: 8px; height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  display: inline-block;
+}
+.timer { color: var(--text-dim); }
+.icon-btn {
+  background: none; border: none; color: var(--text);
+  font-size: 16px; cursor: pointer;
+}
+

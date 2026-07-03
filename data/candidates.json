@@ -1,0 +1,10 @@
+[
+  { "id": "0000000001644794", "name": "Chedrick Rodriguez", "email": "Chedrick.Rodriguez@datamatics.com", "examName": "ZZDEMO Test", "initials": "CR", "color": "#3ecf6b" },
+  { "id": "0000000001645112", "name": "Candidate 1", "email": "Candidate1@datamatics.com", "examName": "ZZDEMO Test", "initials": "C1", "color": "#4a90d9" },
+  { "id": "0000000001645873", "name": "Candidate 2", "email": "Candidate2@datamatics.com", "examName": "ZZDEMO Test", "initials": "C2", "color": "#e8823c" },
+  { "id": "0000000001646210", "name": "Candidate 3", "email": "Candidate3@datamatics.com", "examName": "ZZDEMO Test", "initials": "C3", "color": "#c15fd6" },
+  { "id": "0000000001646932", "name": "Candidate 4", "email": "Candidate4@datamatics.com", "examName": "ZZDEMO Test", "initials": "C4", "color": "#d9534f" },
+  { "id": "0000000001647401", "name": "Candidate 5", "email": "Candidate5@datamatics.com", "examName": "ZZDEMO Test", "initials": "C5", "color": "#2fb8b8" },
+  { "id": "0000000001647988", "name": "Candidate 6", "email": "Candidate6@datamatics.com", "examName": "ZZDEMO Test", "initials": "C6", "color": "#b8a12f" },
+  { "id": "0000000001648550", "name": "Candidate 7", "email": "Candidate7@datamatics.com", "examName": "ZZDEMO Test", "initials": "C7", "color": "#7a8bd9" }
+]

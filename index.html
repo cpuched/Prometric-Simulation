@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ProctorSim — Training Simulator</title>
-<link rel="stylesheet" href="style.css?v=2">
+<!-- Page styling lives in assets/css; feature content is maintained in data/. -->
+<link rel="stylesheet" href="assets/css/style.css?v=10">
 </head>
 <body>
 
@@ -25,22 +26,45 @@
 
   <main class="layout">
 
-    <!-- LEFT: candidate queue (up to 8) — populated by script.js, click a tile to bring that candidate into the main panel -->
+    <!-- LEFT: candidate queue (up to 8) — populated by assets/js/app.js. -->
     <aside class="cam-rail" id="camRail"></aside>
 
     <!-- CENTER: main video + chat -->
     <section class="main-panel">
       <div class="main-video">
-        <span class="cam-placeholder">Live exam view</span>
+        <!-- These values are updated by switchCandidate() in assets/js/app.js. -->
+        <div class="main-video-placeholder">
+          <div class="main-candidate-avatar" id="mainCandidateAvatar">CR</div>
+          <div class="main-candidate-identity">
+            <strong id="mainCandidateName">Chedrick Rodriguez</strong>
+            <span id="mainCandidateStatus">Waiting to start exam</span>
+          </div>
+        </div>
       </div>
       <div class="main-video-bar">
         <span class="session-label" id="mainSessionLabel">ZZDEMO Testing</span>
+        <span class="candidate-id" id="candidateIdLabel">8800000001644794</span>
       </div>
 
       <div class="candidate-strip">
-        <div class="candidate-id" id="candidateIdLabel">8800000001644794</div>
-        <button class="ctrl-btn stacked" data-action="photo">📷<span>Take photo</span></button>
-        <button class="ctrl-btn stacked muted" data-action="mic">🚫🎙<span>Me</span></button>
+        <button class="ctrl-btn stacked primary-action" id="examToggleBtn" type="button" data-action="start">▶<span>Start Exam</span></button>
+        <button class="ctrl-btn stacked" id="takePhotoBtn" type="button" data-action="photo" aria-label="Take photo">
+          <svg class="control-icon camera-icon" viewBox="0 0 32 24" aria-hidden="true">
+            <path d="M3.5 6.5h5l2-3h11l2 3h5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-25a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z"/>
+            <circle cx="16" cy="14" r="5"/>
+          </svg>
+          <span>Take photo</span>
+        </button>
+        <button class="ctrl-btn stacked microphone-toggle" id="micToggleBtn" type="button" data-action="mic" aria-label="Mute microphone" aria-pressed="false">
+          <span class="microphone-icon-wrap" aria-hidden="true">
+            <svg class="control-icon microphone-icon" viewBox="0 0 24 32">
+              <rect x="7" y="1.5" width="10" height="19" rx="5"/>
+              <path d="M3.5 14v1.5a8.5 8.5 0 0 0 17 0V14M12 24v6M7.5 30h9"/>
+            </svg>
+            <span class="mute-slash"></span>
+          </span>
+          <span>Me</span>
+        </button>
       </div>
 
       <div class="live-row">
@@ -52,11 +76,8 @@
         <button class="tab active" data-tab="chat">CHAT</button>
         <button class="tab" data-tab="info">CANDIDATE INFO</button>
         <button class="tab" data-tab="security">SECURITY</button>
-        <div class="scenario-tab-wrap">
-          <button class="tab" id="scenarioTabBtn" data-tab="scenario">SCENARIO <span class="caret">▾</span></button>
-          <!-- populated from data/scenarios.js — scrollable so more scenarios can be added later -->
-          <div class="scenario-dropdown" id="scenarioDropdown"></div>
-        </div>
+        <button class="tab" id="typingTabBtn" data-tab="typing">TYPING TEST</button>
+        <button class="tab" id="scenarioTabBtn" data-tab="scenario">SCENARIO</button>
       </nav>
 
       <div class="chat-window" id="chatWindow"></div>
@@ -65,6 +86,55 @@
         <input type="text" id="chatInput" placeholder="Type message" autocomplete="off">
         <button type="submit" class="send-btn" aria-label="Send">➤</button>
       </form>
+
+      <div class="scenario-review-row" id="scenarioReviewRow" hidden>
+        <button class="scenario-feedback-btn" id="scenarioFeedbackBtn" type="button">Coaching Feedback</button>
+      </div>
+
+      <section class="typing-test" id="typingTest" hidden aria-labelledby="typingTitle">
+        <div class="typing-heading">
+          <div>
+            <span class="typing-category" id="typingCategory"></span>
+            <h2 id="typingTitle"></h2>
+          </div>
+          <span class="typing-difficulty" id="typingDifficulty"></span>
+        </div>
+        <p class="typing-purpose" id="typingPurpose"></p>
+        <div class="typing-script" id="typingScript" aria-live="polite"></div>
+        <label class="typing-input-label" for="typingInput">Type the script exactly as shown</label>
+        <textarea id="typingInput" class="typing-input" rows="4" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+        <div class="typing-results" id="typingResults" hidden aria-live="polite">
+          <span><strong id="typingAccuracy">0%</strong> Accuracy</span>
+          <span><strong id="typingMistakes">0</strong> Mistakes</span>
+          <span><strong>Complete</strong> Status</span>
+          <button class="next-script-btn" id="nextScriptBtn" type="button" hidden>Next Script</button>
+        </div>
+      </section>
+
+      <section class="content-panel candidate-info-panel" id="candidateInfoPanel" hidden aria-labelledby="candidateInfoTitle">
+        <div class="content-panel-heading">
+          <div><span class="content-eyebrow">Candidate profile</span><h2 id="candidateInfoTitle">Candidate Information</h2></div>
+          <span class="content-status">Session assigned</span>
+        </div>
+        <dl class="candidate-details">
+          <div><dt>Candidate Name</dt><dd id="infoCandidateName"></dd></div>
+          <div><dt>Candidate Email</dt><dd id="infoCandidateEmail"></dd></div>
+          <div><dt>Exam Name</dt><dd id="infoExamName"></dd></div>
+          <div><dt>Confirmation Number</dt><dd id="infoConfirmationNumber"></dd></div>
+        </dl>
+        <div class="capture-section-heading">
+          <div><span class="content-eyebrow">Camera captures</span><h3>Candidate Photos</h3></div>
+          <span id="captureCount">0 captures</span>
+        </div>
+        <div class="candidate-captures" id="candidateCaptures"></div>
+      </section>
+
+      <section class="content-panel security-panel" id="securityPanel" hidden aria-labelledby="securityTitle">
+        <div class="coming-soon-icon" aria-hidden="true">⌁</div>
+        <span class="content-eyebrow">Security Escalations</span>
+        <h2 id="securityTitle">Available Soon</h2>
+        <p>Candidate security escalations will be available here in the future update.</p>
+      </section>
     </section>
 
     <!-- RIGHT: activity log + notes -->
@@ -85,7 +155,29 @@
     <div class="modal-box" id="actionModalBox"></div>
   </div>
 
-  <script src="./data/scenarios.js?v=2"></script>
-  <script src="script.js?v=2"></script>
+  <div class="modal-overlay" id="scenarioCoachingOverlay" aria-hidden="true">
+    <div class="modal-box scenario-coaching-modal" role="dialog" aria-modal="true" aria-labelledby="scenarioCoachingTitle">
+      <div class="scenario-coaching-body" id="scenarioCoachingBody"></div>
+      <div class="scenario-coaching-actions">
+        <button class="scenario-review-btn" id="scenarioReviewBtn" type="button">Review Conversation</button>
+        <button class="scenario-acknowledge-btn" id="scenarioAcknowledgeBtn" type="button">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="progressConfirmOverlay" aria-hidden="true">
+    <div class="modal-box progress-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="progressConfirmTitle" aria-describedby="progressConfirmMessage">
+      <div class="progress-confirm-icon" aria-hidden="true">!</div>
+      <h3 class="modal-title" id="progressConfirmTitle">Leave this exercise?</h3>
+      <p id="progressConfirmMessage"></p>
+      <div class="progress-confirm-actions">
+        <button class="progress-stay-btn" id="progressStayBtn" type="button">Stay</button>
+        <button class="progress-abandon-btn" id="progressAbandonBtn" type="button">Abandon Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- One module entry point imports all feature behavior and scenario definitions. -->
+  <script type="module" src="assets/js/app.js?v=10"></script>
 </body>
 </html>
