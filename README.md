@@ -1,75 +1,70 @@
-# ProctorSim — BPO Proctoring Tool Trainer
+# ProctorSim Training Simulator
 
-A lightweight, front-end-only simulator of a proctoring/monitoring interface, built to let
-newbie BPO agents practice navigating the chat and activity-log workflow before they get
-access to the real production tool.
+ProctorSim is a frontend-only training environment for practicing proctor chat, exact-script typing, and scored operational scenarios. It uses native browser modules and external content files without a backend, database, AI API, persistence, or reporting.
 
-## Features
-- Reference-accurate layout: candidate/self camera panels, main video pane, live chat, and
-  activity timeline — all panels scroll internally, so the page never grows past the viewport
-- **Role: you are the proctor.** You type the proctor's script lines (based on the real
-  Proctor Agent Script), and the simulated candidate responds automatically after a short
-  "typing…" delay — matching how the real chat exchange actually flows
-- Editable trigger/response pairs in `data/triggers.json` — no code changes needed to add
-  new script lines or scenarios
-- Live activity log with note-taking, styled to match the real tool's tag system
-  (`note`, `assignment`, `disconnect`)
-- Countdown "Live" timer for exam-session realism
+## Core features
 
-## Tech stack
-Plain HTML / CSS / JavaScript — no build step, no framework, no backend required.
+- **Chat:** the trainee sends proctor messages and receives deterministic candidate replies from configurable trigger rules.
+- **Candidate Info:** displays candidate identity, exam details, and placeholder camera captures in newest-first pages of 12.
+- **Typing Test:** provides exact-copy practice with live character highlighting, accuracy, and mistake counts.
+- **Scenario Mode:** guides scenario conversations, evaluates required criteria, collects Action Tab details, and presents coaching feedback.
+- **Security:** remains a separate placeholder for future frontend development.
 
-## Running locally
-Because `script.js` fetches `data/triggers.json`, opening `index.html` directly as a
-`file://` URL will be blocked by the browser's CORS policy. Serve it locally instead:
+All candidate conversations, timers, captures, notes, and exercise progress exist only in memory and reset when the page reloads.
 
-**Option A — VS Code Live Server extension**
-1. Install the "Live Server" extension in VS Code
-2. Right-click `index.html` → "Open with Live Server"
+## Current architecture
 
-**Option B — Python's built-in server**
-```bash
-cd bpo-sim-tool
-python3 -m http.server 8000
+`index.html` loads one module entry point: `assets/js/app.js`. The application shell imports feature modules, utility modules, and the Scenario registry explicitly. No feature depends on global `window` variables or HTML script order.
+
+```text
+Prometric-Simulation/
+|-- index.html
+|-- assets/
+|   |-- css/
+|   |   |-- style.css          # Imports all stylesheet sections
+|   |   |-- base.css           # Theme variables, reset, and top bar
+|   |   |-- layout.css         # Main three-panel layout and navigation
+|   |   |-- components.css     # Shared controls and modal styling
+|   |   |-- chat.css           # Chat transcript and input
+|   |   |-- typing-test.css    # Typing Test layout and states
+|   |   |-- candidate.css      # Candidate Info and captures
+|   |   |-- scenario.css       # Scenario selection and coaching
+|   |   `-- activity.css       # Activity log, notes, and responsive rules
+|   `-- js/
+|       |-- app.js             # State, candidates, tabs, timers, notes, startup
+|       |-- chat.js            # Ordinary trigger-reply chat behavior
+|       |-- typing-test.js     # Typing Test UI and lifecycle
+|       |-- scenario-engine.js # Scenario flow, actions, and feedback
+|       |-- data-loader.js     # Content loading and validation
+|       |-- matching-engine.js # Deterministic trigger matching
+|       |-- scoring-engine.js  # Scenario criterion scoring
+|       |-- typing-metrics.js  # Accuracy and mistake calculation
+|       `-- pagination.js      # Capture pagination calculation
+|-- data/
+|   |-- candidates.json
+|   |-- triggers.json
+|   |-- typing-tests.json
+|   `-- scenarios/
+|       |-- index.js           # Scenario registry
+|       `-- vpn-detected.js    # VPN scenario definition
+|-- docs/
+|   `-- UPDATING.md
+|-- .gitignore
+`-- README.md
 ```
-Then open `http://localhost:8000` in your browser.
 
-## Project structure
-```
-bpo-sim-tool/
-├── index.html          # Page structure / layout
-├── style.css            # Dark theme styling matching the reference tool
-├── script.js             # Chat logic, trigger matching, activity log
-├── data/
-│   └── triggers.json    # Editable keyword → auto-reply mapping
-└── README.md
-```
+## Content maintenance
 
-## Customizing scenarios
-Open `data/triggers.json` and add new entries under `triggers`. The `keywords` should match
-phrases from **your proctor script** (what the trainee types), and `reply` is what the
-simulated candidate says back:
-```json
-{
-  "keywords": ["please ensure your head to shoulders"],
-  "reply": "Understood, I'll stay in view."
-}
-```
-`fallbackReplies` is used when nothing matches, so the chat never goes silent.
+- Edit candidates in `data/candidates.json`.
+- Edit ordinary chat triggers and replies in `data/triggers.json`.
+- Edit Typing Test exercises in `data/typing-tests.json`.
+- Add a scenario definition and register it in `data/scenarios/index.js`.
+- Edit the stylesheet associated with the feature being changed.
 
-The current trigger set is built around the **Proctor Agent Script** portion of a real
-proctoring workflow (initial check-in confirmation, exam launch, break return security scan,
-and exam completion) — not the Readiness Agent script, since the Readiness Agent's check-in
-happens over audio, not chat.
+Ordinary content changes do not require editing HTML. HTML should change only when a genuinely new interface element is introduced.
 
-## Roadmap ideas
-- [ ] Score trainees on response time / correct escalation choices
-- [ ] Add a "Candidate Info" and "Security" tab with mock data
-- [ ] Persist session transcripts (would need a backend + PostgreSQL — see below)
-- [ ] Multi-scenario picker (disconnect drill, ID verification drill, etc.)
+See [docs/UPDATING.md](docs/UPDATING.md) for schemas and detailed maintenance instructions.
 
-### If persistence is added later
-This version is intentionally backend-free. If trainee session history, scoring, or
-multi-user accounts are needed down the line, the natural next step is a small
-Node.js + Express API backed by PostgreSQL, since Postgres handles JSON chat-log columns
-well and pairs cleanly with a JS/TS backend.
+## Current scope
+
+Only VPN Detected is registered in Scenario Mode. Trigger and scenario scoring use deterministic phrase rules rather than semantic or AI-based interpretation.
